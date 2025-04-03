@@ -1,35 +1,18 @@
 using System.Collections;
+using System.ComponentModel;
 using UnityEngine;
 
 [System.Serializable]
 
 public class Item
 {
+    public ToolboxItemFilterType itemType;
     public string itemName;
-    public int itemID;
-    public string itemDes;
-    public Texture2D itemIcon;
-    //public ItemType itemType;
+    public MeshFilter itemMesh;
 
-    //public enum ItemType
-    //{
-    //    Seed
-    //}
-
-    public Item()
+    public bool Use()
     {
-
-    }
-
-    public Item(string name, int id, string desc)// ItemType type){
-    {
-        itemName = name;
-        itemID = id;
-        itemDes = desc;
-
-        //itemIcon = Resources.Load<Texture2D>(name);
-
-        //itemType = type;
+        return false;
     }
 }
 

@@ -4,28 +4,20 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    public List<Item> inventory = new List<Item>();
-    private ItemDatabase db;
+    public GameObject inventoryPanel;
+    bool activeInventory = false;
 
-    public int slotX, slotY;
-    public List<Item> slots = new List<Item>();
-
-    void Start()
+    private void Start()
     {
-        for(int i = 0; i < slotX * slotY; i++)
-        {
-            slots.Add(new Item());
-        }
-        db = GameObject.FindGameObjectWithTag("ItemDatabase").GetComponent<ItemDatabase>();
-
-        inventory.Add(db.items[0]);
+        inventoryPanel.SetActive(activeInventory);
     }
 
-    //void OnGUI()
-    //{
-    //    for(int i = 0; i < inventory.Count; i++)
-    //    {
-    //        GUI.Label(new Rect(10, i * 20, 200, 50), inventory[i].itemName);
-    //    }
-    //}
+    private void Update()
+    {
+        if(Input.GetKey(KeyCode.I))
+        {
+            activeInventory = !activeInventory;
+            inventoryPanel.SetActive(activeInventory);
+        }
+    }
 }
