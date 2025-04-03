@@ -16,6 +16,10 @@ public class Item
     //    Seed
     //}
 
+    public Item()
+    {
+
+    }
 
     public Item(string name, int id, string desc)// ItemType type){
     {
