@@ -1,14 +1,19 @@
 using System.Collections;
 using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.UI;
 
+public enum ItemType
+{
+    seed
+}
 [System.Serializable]
 
 public class Item
 {
-    public ToolboxItemFilterType itemType;
+    public ItemType itemType;
     public string itemName;
-    public MeshFilter itemMesh;
+    public Sprite itemImage;
 
     public bool Use()
     {

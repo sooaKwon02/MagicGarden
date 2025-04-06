@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1556cbcf986cdd2418a4b918b8ef63b2, type: 3}
   m_Name: SeedSpawnConfig
   m_EditorClassIdentifier: 
-  spawnProbability: 0.36
+  spawnProbability: 0.308
   minSpawnTime: 1
   maxSpawnTime: 10
   spawnAreaSize: {x: 10, y: 0, z: 10}

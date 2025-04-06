@@ -4,20 +4,66 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    public GameObject inventoryPanel;
-    bool activeInventory = false;
-
-    private void Start()
+    #region Singleton
+    public static Inventory instance;
+    private void Awake()
     {
-        inventoryPanel.SetActive(activeInventory);
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+    }
+    #endregion
+    public delegate void OnSlotCountChange(int value);
+    public OnSlotCountChange onSlotCountChange;
+
+    public delegate void OnChangeItem();
+    public OnChangeItem onChangeItem;
+
+    public List<Item> items = new List<Item>();
+
+    private int slotCnt;
+
+    public int SlotCnt
+    {
+        get =>slotCnt;
+        set
+        {
+            slotCnt = value;
+            if (onSlotCountChange != null)
+                onSlotCountChange.Invoke(slotCnt);
+        }
     }
 
-    private void Update()
+    void Start()
+    { 
+        SlotCnt = 4;
+    }
+
+
+    public bool AddItem(Item _item)
     {
-        if(Input.GetKey(KeyCode.I))
+        if (items.Count < SlotCnt)
         {
-            activeInventory = !activeInventory;
-            inventoryPanel.SetActive(activeInventory);
+            items.Add(_item);
+            if (onChangeItem != null)
+                onChangeItem.Invoke();
+            return true;
+        }
+        return false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("FieldItem"))
+        {
+            FieldItems fieldItems = other.GetComponent<FieldItems>();
+            if (AddItem(fieldItems.GetItem()))
+            {
+                fieldItems.DestroyItem();
+            }
         }
     }
 }

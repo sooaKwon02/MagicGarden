@@ -10,7 +10,7 @@ public class FieldItems : MonoBehaviour
     {
         item.itemName = _item.itemName;
         item.itemType = _item.itemType;
-        item.itemMesh = _item.itemMesh;
+        item.itemImage = _item.itemImage;
     }
 
     public Item GetItem()

@@ -50,7 +50,7 @@ public class SeedSpawner : MonoBehaviour
         Vector3 center = transform.position;
         Vector3 randomPos = center + new Vector3(
             Random.Range(-spawnConfig.spawnAreaSize.x * 0.5f, spawnConfig.spawnAreaSize.x * 0.5f),
-            Random.Range(-spawnConfig.spawnAreaSize.y * 0.5f, spawnConfig.spawnAreaSize.y * 0.5f),
+            //Random.Range(-spawnConfig.spawnAreaSize.y * 0.5f, spawnConfig.spawnAreaSize.y * 0.5f),
             Random.Range(-spawnConfig.spawnAreaSize.z * 0.5f, spawnConfig.spawnAreaSize.z * 0.5f)
         );
 
