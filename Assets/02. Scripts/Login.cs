@@ -14,19 +14,6 @@ public class Login : MonoBehaviour
     {
         loginButton.onClick.AddListener(() =>
         {
-            Debug.Log(" 버튼 눌림");
-
-            if (Main.Instance == null)
-            {
-                Debug.LogError("1. Main.Instance가 null입니다!");
-                return;
-            }
-
-            if (Main.Instance.Web == null)
-            {
-                Debug.LogError(" 2Main.Instance.Web이 null입니다!");
-                return;
-            }
             string username = idInput.text;
             string password = passwordInput.text;
             StartCoroutine(Main.Instance.Web.Login(username, password));

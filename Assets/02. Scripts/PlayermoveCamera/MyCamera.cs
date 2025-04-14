@@ -8,11 +8,11 @@ public class MyCamera : MonoBehaviour
 
     public Transform target; // Player
 
-    private float rotSensitive = 3f;
-    private float dis = 15f;
-    private float RotationMin = -10f;
-    private float RotationMax = 80f;
-    private float smoothTime = 0.12f;
+    public float rotSensitive = 3f;
+    public float dis = 15f;
+    public float RotationMin = -10f;
+    public float RotationMax = 50f;
+    public float smoothTime = 0.12f;
 
     private Vector3 targetRotation;
     private Vector3 currentVel;
