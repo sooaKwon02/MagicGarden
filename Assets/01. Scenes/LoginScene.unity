@@ -141,7 +141,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &183080714
 RectTransform:
   m_ObjectHideFlags: 0
@@ -181,7 +181,7 @@ MonoBehaviour:
   crIdInput: {fileID: 1003696453}
   crPasswordInput: {fileID: 1389718992}
   loginButton: {fileID: 1347564876}
-  createButton: {fileID: 0}
+  createButton: {fileID: 1237939865}
 --- !u!114 &183080716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2721,7 +2721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d08dbd28e4897f14ebfc1a432b1af9d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  createPanel: {fileID: 0}
+  createPanel: {fileID: 183080713}
   Web: {fileID: 1136055328}
 --- !u!4 &1585059769
 Transform:
