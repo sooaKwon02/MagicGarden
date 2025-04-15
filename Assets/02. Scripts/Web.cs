@@ -15,11 +15,14 @@ public class Web : MonoBehaviour
 
     public IEnumerator RegisterUser(string username, string password)
     {
+        //string url = "http://192.168.45.232/MagicGarden/RegisterUser.php";
+        string url = "http://127.0.0.1/MagicGarden/RegisterUser.php";
+
         WWWForm form = new WWWForm();
         form.AddField("loginUser", username);
         form.AddField("loginPass", password);
 
-        using (UnityWebRequest www = UnityWebRequest.Post("http://192.168.45.232/MagicGarden/RegisterUser.php", form))
+        using (UnityWebRequest www = UnityWebRequest.Post(url, form))
         {
             yield return www.SendWebRequest();
 
@@ -36,12 +39,15 @@ public class Web : MonoBehaviour
 
     public IEnumerator Login(string username, string password)
     {
+        //string url = "http://192.168.45.232/MagicGarden/Login.php";
+        string url = "http://127.0.0.1/MagicGarden/Login.php";
+
         WWWForm form = new WWWForm();
         form.AddField("loginUser", username);
         form.AddField("loginPass", password);
         Debug.Log(username + " " + password);   
 
-        using (UnityWebRequest www = UnityWebRequest.Post("http://192.168.45.232/MagicGarden/Login.php", form))
+        using (UnityWebRequest www = UnityWebRequest.Post(url, form))
         {
             yield return www.SendWebRequest();
 
