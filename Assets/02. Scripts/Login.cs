@@ -26,11 +26,11 @@ public class Login : MonoBehaviour
             Debug.Log("입력된 비밀번호: " + password);
         });
 
-        createButton.onClick.AddListener(() =>
-        {
-            string username = crIdInput.text;
-            string password = crPasswordInput.text;
-            StartCoroutine(Main.Instance.Web.RegisterUser(username, password));
-        });
+        //createButton.onClick.AddListener(() =>
+        //{
+        //    string username = crIdInput.text;
+        //    string password = crPasswordInput.text;
+        //    StartCoroutine(Main.Instance.Web.RegisterUser(username, password));
+        //});
     }
 }

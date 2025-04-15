@@ -5,19 +5,19 @@ using UnityEngine;
 public class Main : MonoBehaviour
 {
     public static Main Instance;
-    public GameObject createPanel;
+   // public GameObject createPanel;
 
     public Web Web;
 
     void Awake()
     {
         Instance = this;
-        createPanel.SetActive(false);
+        //createPanel.SetActive(false);
         //Web = GetComponent<Web>();
     }
 
-    public void CreateID()
-    {
-        createPanel.SetActive(true);
-    }
+    //public void CreateID()
+    //{
+    //    createPanel.SetActive(true);
+    //}
 }
