@@ -8,10 +8,12 @@ public class Main : MonoBehaviour
    // public GameObject createPanel;
 
     public Web Web;
+    public NPCQuestManager npcQuestManager;
 
     void Awake()
     {
         Instance = this;
+        DontDestroyOnLoad(gameObject);
         //createPanel.SetActive(false);
         //Web = GetComponent<Web>();
     }
