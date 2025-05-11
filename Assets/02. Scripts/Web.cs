@@ -81,28 +81,34 @@ public class Web : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError("���� ���� ����: " + www.error);
+            Debug.LogError("퀘스트 단계 불러오기 실패: " + www.error);
         }
         else
         {
-            // PHP�� �迭�� ��ȯ�ϹǷ� JSON ���� ����
+            //PHP가 배열을 반환하므로 JSON 파싱을 위해 감싸줌
             string json = "{\"steps\":" + www.downloadHandler.text + "}";
 
             NPCQuestStepList npcStepList = JsonUtility.FromJson<NPCQuestStepList>(json);
 
             //foreach (QuestStep step in npcStepList.steps)
             //{
-            //    Debug.Log($"[�ܰ� {step.step_number}] {step.dialogue} ({step.condition_type})");
+            //    Debug.Log($"[단계 {step.step_number}] {step.dialogue} ({step.condition_type})");
             //}
             List<string> intro = npcStepList.steps
                 .Where(s => s.step_number == 0)
                 .Select(s => s.dialogue)
                 .ToList();
 
-            Main.Instance.npcQuestManager.StartText(intro, () =>
-            {
-                Debug.Log("��");
-            });
+            List<QuestStep> questSteps = npcStepList.steps
+                .Where(s => s.step_number >= 1)
+                .OrderBy(s => s.step_number)
+                .ToList();
+
+            //Main.Instance.npcQuestManager.StartText(intro, () =>
+            //{
+                //Debug.Log("퀘스트 시작");
+                Main.Instance.npcQuestManager.SetQuestData(intro, questSteps);
+            //});
         }
     }
 
@@ -125,13 +131,13 @@ public class Web : MonoBehaviour
     //    }
     //    else
     //    {
-    //        Debug.LogError("���� ��� ��û ����: " + www.error);
+    //        Debug.LogError("NPC 대사 요청 실패: " + www.error);
     //    }
     //}
 
     //void DisplayDialogues(List<string> lines)
     //{
-    //    // TODO: UI ���� (��ǳ��, �ؽ�Ʈâ ��)
+    //    // TODO: UI 출력 (대사창, 텍스트창 등)
     //    foreach (string line in lines)
     //    {
     //        Debug.Log($"[{npcName}] {line}");
