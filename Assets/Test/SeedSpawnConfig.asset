@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnProbability: 1
   minSpawnTime: 1
-  maxSpawnTime: 5
+  maxSpawnTime: 3
   spawnAreaSize: {x: 1, y: 0, z: 1}

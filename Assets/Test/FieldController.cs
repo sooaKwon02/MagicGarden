@@ -54,12 +54,19 @@ public class FieldSeedSpawner : MonoBehaviour
     // 일정 시간이 지나면 씨앗을 꽃으로 바꾸는 코루틴
     IEnumerator ChangeSeedToFlower(GameObject seed)
     {
+        Debug.Log("[FieldSeedSpawner] ChangeSeedToFlower started, timeToBloom = " + timeToBloom);
         yield return new WaitForSeconds(timeToBloom);
+        Debug.Log("[FieldSeedSpawner] Bloom wait over; seed = " + seed);
         if (seed != null)
         {
             Vector3 pos = seed.transform.position;
             Destroy(seed);
             Instantiate(flowerPrefab, pos, Quaternion.identity);
+            Debug.Log("[FieldSeedSpawner] Flower instantiated at " + pos);
+        }
+        else
+        {
+            Debug.LogWarning("[FieldSeedSpawner] Seed was null before bloom");
         }
     }
 }

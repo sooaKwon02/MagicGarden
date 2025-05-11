@@ -81,18 +81,18 @@ public class Web : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError("¼­¹ö ¿¬°á ½ÇÆÐ: " + www.error);
+            Debug.LogError("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: " + www.error);
         }
         else
         {
-            // PHP´Â ¹è¿­¸¸ ¹ÝÈ¯ÇÏ¹Ç·Î JSON ±¸Á¶ º¸Á¤
+            // PHPï¿½ï¿½ ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï¹Ç·ï¿½ JSON ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             string json = "{\"steps\":" + www.downloadHandler.text + "}";
 
             NPCQuestStepList npcStepList = JsonUtility.FromJson<NPCQuestStepList>(json);
 
             //foreach (QuestStep step in npcStepList.steps)
             //{
-            //    Debug.Log($"[´Ü°è {step.step_number}] {step.dialogue} ({step.condition_type})");
+            //    Debug.Log($"[ï¿½Ü°ï¿½ {step.step_number}] {step.dialogue} ({step.condition_type})");
             //}
             List<string> intro = npcStepList.steps
                 .Where(s => s.step_number == 0)
@@ -101,7 +101,7 @@ public class Web : MonoBehaviour
 
             Main.Instance.npcQuestManager.StartText(intro, () =>
             {
-                Debug.Log("³¡");
+                Debug.Log("ï¿½ï¿½");
             });
         }
     }
@@ -112,7 +112,7 @@ public class Web : MonoBehaviour
 
     //    WWWForm form = new WWWForm();
     //    form.AddField("npc_id", npcId);
-    //    form.AddField("type", "normal"); // ¶Ç´Â "quest_intro", "quest"
+    //    form.AddField("type", "normal"); // ï¿½Ç´ï¿½ "quest_intro", "quest"
 
     //    UnityWebRequest www = UnityWebRequest.Post("http://192.168.45.232/MagicGarden/GetNPCDialogues.php", form);
     //    yield return www.SendWebRequest();
@@ -125,13 +125,13 @@ public class Web : MonoBehaviour
     //    }
     //    else
     //    {
-    //        Debug.LogError("¼­¹ö ´ë»ç ¿äÃ» ½ÇÆÐ: " + www.error);
+    //        Debug.LogError("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ã» ï¿½ï¿½ï¿½ï¿½: " + www.error);
     //    }
     //}
 
     //void DisplayDialogues(List<string> lines)
     //{
-    //    // TODO: UI ¿¬°á (¸»Ç³¼±, ÅØ½ºÆ®Ã¢ µî)
+    //    // TODO: UI ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½Ç³ï¿½ï¿½, ï¿½Ø½ï¿½Æ®Ã¢ ï¿½ï¿½)
     //    foreach (string line in lines)
     //    {
     //        Debug.Log($"[{npcName}] {line}");

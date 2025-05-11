@@ -572,8 +572,34 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6441544104205412129, guid: 1605d011174816144a5437deae448bc5,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 628157675}
   m_SourcePrefab: {fileID: 100100000, guid: 1605d011174816144a5437deae448bc5, type: 3}
+--- !u!1 &628157674 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6441544104205412129, guid: 1605d011174816144a5437deae448bc5,
+    type: 3}
+  m_PrefabInstance: {fileID: 628157673}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &628157675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 628157674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 148b5ad9f028a38449bb0a46a83a6975, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seedPrefab: {fileID: 0}
+  flowerPrefab: {fileID: 0}
+  spawnConfig: {fileID: 0}
+  timeToBloom: 10
 --- !u!1001 &788087351
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -766,6 +792,11 @@ MonoBehaviour:
   Yaxis: 30
   Xaxis: 30
   target: {fileID: 195540863}
+  rotSensitive: 3
+  dis: 15
+  RotationMin: -10
+  RotationMax: 50
+  smoothTime: 0.12
 --- !u!114 &852317406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -833,7 +864,7 @@ MonoBehaviour:
   flowerPrefab: {fileID: 6636864220674653774, guid: 760cdf65c1d4c744481c9aee4685e980,
     type: 3}
   spawnConfig: {fileID: 11400000, guid: a88e01236f37d0c4b9a16174eb810540, type: 2}
-  timeToBloom: 10
+  timeToBloom: 3
 --- !u!1001 &993317169
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1261,7 +1292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seedPrefab: {fileID: 4020009782019240608, guid: 336b836d53422bd4d91c4493988e8f30,
     type: 3}
-  spawnConfig: {fileID: 11400000, guid: a2c6ae0639153e84583d416bb807e90f, type: 2}
+  spawnConfig: {fileID: 11400000, guid: a88e01236f37d0c4b9a16174eb810540, type: 2}
 --- !u!4 &1393414572
 Transform:
   m_ObjectHideFlags: 0
@@ -1271,7 +1302,7 @@ Transform:
   m_GameObject: {fileID: 1393414570}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 27.8, y: 3.56, z: 24.5}
+  m_LocalPosition: {x: -3.54, y: 0.6, z: -9.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
