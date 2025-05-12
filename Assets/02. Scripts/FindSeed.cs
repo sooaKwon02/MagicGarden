@@ -9,7 +9,7 @@ public class FindSeed : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            Main.Instance.npcQuestManager.TryAutoAdvanceCollectQuest();
+            //Main.Instance.npcQuestManager.TryAutoAdvanceCollectQuest();
         }
     }
 }
