@@ -60,12 +60,23 @@ public class Web : MonoBehaviour
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError(www.error);
+                Debug.LogError("서버 연결 실패 : " + www.error);
             }
             else
             {
-                Debug.Log(www.downloadHandler.text);
-                SceneManager.LoadScene(1);
+                string json = www.downloadHandler.text;
+                LoginResponse response = JsonUtility.FromJson<LoginResponse>(json);
+
+                if (response.success)
+                {
+                    Debug.Log($"로그인성공, 유저ID {response.user_id}");
+                    SceneManager.LoadScene(1);
+                }
+                else
+                {
+                    Debug.Log(response.message);
+                }
+                //Debug.Log(www.downloadHandler.text);
             }
         }
     }

@@ -22,8 +22,8 @@ public class Login : MonoBehaviour
             string username = idInput.text;
             string password = passwordInput.text;
             StartCoroutine(Main.Instance.Web.Login(username, password));
-            Debug.Log("ÀÔ·ÂµÈ À¯Àú³×ÀÓ: " + username);
-            Debug.Log("ÀÔ·ÂµÈ ºñ¹Ð¹øÈ£: " + password);
+            Debug.Log("ìž…ë ¥ëœ ìœ ì €ë„¤ìž„: " + username);
+            Debug.Log("ìž…ë ¥ëœ ë¹„ë°€ë²ˆí˜¸: " + password);
         });
 
         //createButton.onClick.AddListener(() =>
@@ -32,5 +32,13 @@ public class Login : MonoBehaviour
         //    string password = crPasswordInput.text;
         //    StartCoroutine(Main.Instance.Web.RegisterUser(username, password));
         //});
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+
+        }
     }
 }
