@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 using TMPro;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using static Login;
 
 public class Web : MonoBehaviour
 {
@@ -23,11 +24,14 @@ public class Web : MonoBehaviour
     public IEnumerator RegisterUser(string username, string password)
     {
         //string url = "http://192.168.45.232/MagicGarden/RegisterUser.php";
-        string url = "http://127.0.0.1/MagicGarden/RegisterUser.php";
+        //string url = "http://127.0.0.1/MagicGarden/RegisterUser.php";
+        string url = "http://127.0.0.1/MagicGarden/Join.php";
 
         WWWForm form = new WWWForm();
-        form.AddField("loginUser", username);
-        form.AddField("loginPass", password);
+        //form.AddField("loginUser", username);
+        //form.AddField("loginPass", password);
+        form.AddField("username", username);
+        form.AddField("password", password);
 
         using (UnityWebRequest www = UnityWebRequest.Post(url, form))
         {
@@ -35,11 +39,13 @@ public class Web : MonoBehaviour
 
             if (www.result != UnityWebRequest.Result.Success)
             { 
-                Debug.LogError(www.error);
+                Debug.LogError("서버 연결 실패 : " + www.error);
             }
             else
             {
-                Debug.Log(www.downloadHandler.text);
+                string json = www.downloadHandler.text;
+                RegisterResponse response = JsonUtility.FromJson<RegisterResponse>(json);
+                Debug.Log(response.message);
             }
         }
     }
@@ -65,18 +71,18 @@ public class Web : MonoBehaviour
             else
             {
                 string json = www.downloadHandler.text;
+                Debug.Log("서버 응답 JSON: " + json);
                 LoginResponse response = JsonUtility.FromJson<LoginResponse>(json);
 
                 if (response.success)
                 {
-                    Debug.Log($"로그인성공, 유저ID {response.user_id}");
+                    Debug.Log($"로그인성공, 유저이름 {response.user_name}");
                     SceneManager.LoadScene(1);
                 }
                 else
                 {
                     Debug.Log(response.message);
                 }
-                //Debug.Log(www.downloadHandler.text);
             }
         }
     }
@@ -101,10 +107,6 @@ public class Web : MonoBehaviour
 
             NPCQuestStepList npcStepList = JsonUtility.FromJson<NPCQuestStepList>(json);
 
-            //foreach (QuestStep step in npcStepList.steps)
-            //{
-            //    Debug.Log($"[단계 {step.step_number}] {step.dialogue} ({step.condition_type})");
-            //}
             List<string> intro = npcStepList.steps
                 .Where(s => s.step_number == 0)
                 .Select(s => s.dialogue)
@@ -122,36 +124,4 @@ public class Web : MonoBehaviour
             //});
         }
     }
-
-    //IEnumerator GetDialoguesFromServer(int npcId)
-    //{
-    //    string url = "http://127.0.0.1/MagicGarden/Login.php";
-
-    //    WWWForm form = new WWWForm();
-    //    form.AddField("npc_id", npcId);
-    //    form.AddField("type", "normal"); // �Ǵ� "quest_intro", "quest"
-
-    //    UnityWebRequest www = UnityWebRequest.Post("http://192.168.45.232/MagicGarden/GetNPCDialogues.php", form);
-    //    yield return www.SendWebRequest();
-
-    //    if (www.result == UnityWebRequest.Result.Success)
-    //    {
-    //        string json = www.downloadHandler.text;
-    //        NPCDialogueList dialogueList = JsonUtility.FromJson<NPCDialogueList>("{\"dialogues\":" + json + "}");
-    //        DisplayDialogues(dialogueList.dialogues);
-    //    }
-    //    else
-    //    {
-    //        Debug.LogError("NPC 대사 요청 실패: " + www.error);
-    //    }
-    //}
-
-    //void DisplayDialogues(List<string> lines)
-    //{
-    //    // TODO: UI 출력 (대사창, 텍스트창 등)
-    //    foreach (string line in lines)
-    //    {
-    //        Debug.Log($"[{npcName}] {line}");
-    //    }
-    //}
 }
