@@ -64,4 +64,9 @@ public class Login : MonoBehaviour
         else
             StartCoroutine(Main.Instance.Web.RegisterUser(userId, password));
     }
+
+    public void OnXButtonClick()
+    {
+        createPanel.gameObject.SetActive(false);
+    }
 }
