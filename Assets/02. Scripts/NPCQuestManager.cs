@@ -30,49 +30,52 @@ public class NPCQuestManager : MonoBehaviour
 
     void Update()
     {
-        if (isTyping)
+        if (FindSeed.isColl)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (isTyping)
             {
-                StopCoroutine(typingText);
-                isTyping = false;
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    StopCoroutine(typingText);
+                    isTyping = false;
 
-                if (isIntro)
-                {
-                    int safeIndex = Mathf.Clamp(introIndex - 1, 0, introLines.Count - 1);
-                    text.text = introLines[safeIndex];
+                    if (isIntro)
+                    {
+                        int safeIndex = Mathf.Clamp(introIndex - 1, 0, introLines.Count - 1);
+                        text.text = introLines[safeIndex];
+                    }
+                    else
+                    {
+                        int safeIndex = Mathf.Clamp(questIndex - 1, 0, questLines.Count - 1);
+                        text.text = questLines[safeIndex].dialogue;
+                    }
+                    return;
                 }
-                else
+            }
+
+            if (isAccept)
+            {
+                if (Input.GetKeyDown(KeyCode.Y))
                 {
-                    int safeIndex = Mathf.Clamp(questIndex - 1, 0, questLines.Count - 1);
-                    text.text = questLines[safeIndex].dialogue;
+                    AcceptQuest();
+                }
+                else if (Input.GetKeyDown(KeyCode.N))
+                {
+                    StartCoroutine(RejectQuest());
                 }
                 return;
             }
-        }
 
-        if (isAccept)
-        {
-            if (Input.GetKeyDown(KeyCode.Y))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                AcceptQuest();
-            }
-            else if (Input.GetKeyDown(KeyCode.N))
-            {
-                StartCoroutine(RejectQuest());
-            }
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (isIntro)
-            {
-                ShowNextIntroLine();
-            }
-            else
-            {
-                ShowNextQuestLine();
+                if (isIntro)
+                {
+                    ShowNextIntroLine();
+                }
+                else
+                {
+                    ShowNextQuestLine();
+                }
             }
         }
     }

@@ -5,11 +5,23 @@ using UnityEngine;
 
 public class FindSeed : MonoBehaviour
 {
+    public static bool isColl = false;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Player"))
+            isColl = true; Debug.Log(isColl);
+    }
+
     private void OnTriggerStay(Collider other)
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            //Main.Instance.npcQuestManager.TryAutoAdvanceCollectQuest();
-        }
+        if (other.CompareTag("Player"))
+            isColl = true; Debug.Log(isColl);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+            isColl = false; Debug.Log(isColl);
     }
 }
