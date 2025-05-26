@@ -55,7 +55,7 @@ public class InventoryUI : MonoBehaviour
         {
             slots[i].RemoveSlot();
         }
-        for(int i = 0; i < inven.items.Count; i++)
+        for(int i = 0; i < Mathf.Min(inven.items.Count, slots.Length); i++)
         {
             slots[i].item = inven.items[i];
             slots[i].UpdateSlotUI();

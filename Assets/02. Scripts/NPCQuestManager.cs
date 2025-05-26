@@ -7,6 +7,7 @@ using System.Linq;
 
 public class NPCQuestManager : MonoBehaviour
 {
+    public GameObject npcPanel;
     public TMP_Text text;
 
     private List<string> introLines = new List<string>();
@@ -25,6 +26,7 @@ public class NPCQuestManager : MonoBehaviour
 
     void Start()
     {
+        npcPanel.SetActive(false);
         StartCoroutine(Main.Instance.Web.GetQuestStepsFromServer(currentQuestId));
     }
 
@@ -36,6 +38,11 @@ public class NPCQuestManager : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
+                    if (!npcPanel.activeSelf)
+                    {
+                        npcPanel.SetActive(true);
+                    }
+
                     StopCoroutine(typingText);
                     isTyping = false;
 
@@ -70,11 +77,19 @@ public class NPCQuestManager : MonoBehaviour
             {
                 if (isIntro)
                 {
-                    ShowNextIntroLine();
+                    StartCoroutine(ShowNextIntroLine());
                 }
                 else
                 {
-                    ShowNextQuestLine();
+                    StartCoroutine(ShowNextQuestLine());
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                if(!isIntro && !isAccept && !isTyping)
+                {
+                    npcPanel.SetActive(false);
                 }
             }
         }
@@ -94,8 +109,13 @@ public class NPCQuestManager : MonoBehaviour
         text.text = "";
     }
 
-    private void ShowNextIntroLine()
+    private IEnumerator ShowNextIntroLine()
     {
+        if (!npcPanel.activeSelf)
+            npcPanel.SetActive(true);
+
+        yield return null;
+
         if (introIndex < introLines.Count)
         {
             typingText = StartCoroutine(TypeLine(introLines[introIndex]));
@@ -114,7 +134,8 @@ public class NPCQuestManager : MonoBehaviour
         Debug.Log("퀘스트 수락");
         isAccept = false;
         isIntro = false;
-        ShowNextQuestLine();
+
+        StartCoroutine(ShowNextQuestLine());
     }
 
     private IEnumerator RejectQuest()
@@ -131,17 +152,26 @@ public class NPCQuestManager : MonoBehaviour
         introIndex = 0;
         questIndex = 0;
         isIntro = true;
+
+        npcPanel.SetActive(false);
     }
 
-    private void ShowNextQuestLine()
+    private IEnumerator ShowNextQuestLine()
     {
+        if (!npcPanel.activeSelf)
+        {
+            npcPanel.SetActive(true);
+
+            yield return null;
+        }
+
         if (questIndex >= questLines.Count)
         {
             Debug.Log($"퀘스트 {currentQuestId} 완료!");
             text.text = "";
             currentQuestId++;
             StartCoroutine(Main.Instance.Web.GetQuestStepsFromServer(currentQuestId));
-            return;
+            yield break;
         }
 
         QuestStep step = questLines[questIndex];
@@ -204,6 +234,7 @@ public class NPCQuestManager : MonoBehaviour
     {
         text.text = "";
         isTyping = true;
+        yield return new WaitForSeconds(0.5f);
 
         foreach (char letter in line.ToCharArray())
         {

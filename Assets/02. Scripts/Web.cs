@@ -77,6 +77,7 @@ public class Web : MonoBehaviour
                 if (response.success)
                 {
                     Debug.Log($"로그인성공, 유저이름 {response.user_name}");
+                    GameManager.instance.SetPlayerInfo(response.user_name, response.user_level);
                     SceneManager.LoadScene(1);
                 }
                 else
@@ -119,9 +120,95 @@ public class Web : MonoBehaviour
 
             //Main.Instance.npcQuestManager.StartText(intro, () =>
             //{
-                //Debug.Log("퀘스트 시작");
-                Main.Instance.npcQuestManager.SetQuestData(intro, questSteps);
+            //Debug.Log("퀘스트 시작");
+            Main.Instance.npcQuestManager.SetQuestData(intro, questSteps);
             //});
+        }
+    }
+
+    public IEnumerator LoadInventory(string playerID)
+    {
+        string url = "http://127.0.0.1/MagicGarden/LoadInventory.php";
+
+        WWWForm form = new WWWForm();
+        form.AddField("player_id", playerID ?? "");
+
+        using(UnityWebRequest www = UnityWebRequest.Post(url, form))
+        {
+            yield return www.SendWebRequest();
+
+            if(www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("인벤토리 정보 불러오기 실패 : " + www.error);
+            }
+            else
+            {
+                string json = "{\"items\":" + www.downloadHandler.text + "}";
+                InventoryItemList itemList = JsonUtility.FromJson<InventoryItemList>(json);
+
+                if(itemList.items.Count == 0)
+                {
+                    Debug.Log("인벤토리 비어있음");
+                }
+                else
+                {
+                    Debug.Log("아이템 로드 완료");
+                }
+                GameManager.instance.isInventoryLoad = true;
+
+                foreach(var data in itemList.items)
+                {
+                    Item item = ItemDatabase.instance.itemDB.Find(i => i.itemName == data.item_name);
+                    if(item != null)
+                    {
+                        item.itemImage = Resources.Load<Sprite>(data.item_image);
+                        if(item.itemImage == null)
+                            Debug.LogWarning($"이미지 로드 실패 : {data.item_image}");
+                        
+                        Inventory.instance.AddItem(item);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[경고] '{data.item_name}'을 찾지 못함");
+                    }
+                }
+            }
+        }
+    }
+
+    public IEnumerator SaveInventory()
+    {
+        if (string.IsNullOrEmpty(GameManager.instance.playerID))
+        {
+            Debug.LogWarning("플레이어 ID가 설정되지 않음. 저장 건너뜀.");
+            yield break;
+        }
+
+        string url = "http://127.0.0.1/MagicGarden/SaveInventory.php";
+
+        foreach (var item in Inventory.instance.items)
+        {
+            string itemName = item?.itemName ?? "";
+            string itemType = item?.itemType.ToString() ?? "";
+            string itemImagePath = item?.itemImage != null ? item.itemImage.name : "";
+            
+            WWWForm form = new WWWForm();
+            form.AddField("player_id", GameManager.instance.playerID ?? "");
+            form.AddField("item_name", itemName);
+            form.AddField("item_type", itemType);
+            form.AddField("item_image", "Seed/" + itemImagePath);
+
+            Debug.Log($"저장 요청: {itemName}, {itemType}, {itemImagePath}");
+
+            using (UnityWebRequest www = UnityWebRequest.Post(url, form))
+            {
+                yield return www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
+                    Debug.LogError("저장 실패: " + www.error);
+                else
+                    Debug.Log("저장 성공: " + www.downloadHandler.text);
+            }
         }
     }
 }

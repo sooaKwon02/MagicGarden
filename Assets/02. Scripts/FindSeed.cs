@@ -10,18 +10,18 @@ public class FindSeed : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Player"))
-            isColl = true; Debug.Log(isColl);
+            isColl = true; 
     }
 
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
-            isColl = true; Debug.Log(isColl);
+            isColl = true; 
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
-            isColl = false; Debug.Log(isColl);
+            isColl = false; 
     }
 }

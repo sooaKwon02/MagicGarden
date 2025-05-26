@@ -8,8 +8,7 @@ public class LoginResponse
     public string message;
     public string user_name;
     public int user_id;
-
-    
+    public int user_level;
 }
 
 public class RegisterResponse
