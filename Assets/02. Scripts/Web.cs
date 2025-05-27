@@ -13,13 +13,6 @@ public class Web : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
     }
-    
-    void Start()
-    {
-        //StartCoroutine(RegisterUser("testuser3", "2222"));
-        //StartCoroutine(Login("testuser3", "2222"));
-        //StartCoroutine(GetQuestStepsFromServer(1));
-    }
 
     public IEnumerator RegisterUser(string username, string password)
     {
@@ -28,8 +21,7 @@ public class Web : MonoBehaviour
         string url = "http://127.0.0.1/MagicGarden/Join.php";
 
         WWWForm form = new WWWForm();
-        //form.AddField("loginUser", username);
-        //form.AddField("loginPass", password);
+
         form.AddField("username", username);
         form.AddField("password", password);
 
@@ -77,12 +69,13 @@ public class Web : MonoBehaviour
                 if (response.success)
                 {
                     Debug.Log($"로그인성공, 유저이름 {response.user_name}");
-                    GameManager.instance.SetPlayerInfo(response.user_name, response.user_level);
+                    GameManager.Instance.SetPlayerInfo(response.user_name, response.user_level);
                     SceneManager.LoadScene(1);
                 }
                 else
                 {
-                    Debug.Log(response.message);
+                    Login lg = FindObjectOfType<Login>();
+                    lg.ErrorMessage(response.message);
                 }
             }
         }
@@ -103,7 +96,6 @@ public class Web : MonoBehaviour
         }
         else
         {
-            //PHP가 배열을 반환하므로 JSON 파싱을 위해 감싸줌
             string json = "{\"steps\":" + www.downloadHandler.text + "}";
 
             NPCQuestStepList npcStepList = JsonUtility.FromJson<NPCQuestStepList>(json);
@@ -118,11 +110,7 @@ public class Web : MonoBehaviour
                 .OrderBy(s => s.step_number)
                 .ToList();
 
-            //Main.Instance.npcQuestManager.StartText(intro, () =>
-            //{
-            //Debug.Log("퀘스트 시작");
-            Main.Instance.npcQuestManager.SetQuestData(intro, questSteps);
-            //});
+            NPCQuestManager.Instance.SetQuestData(intro, questSteps);
         }
     }
 
@@ -154,7 +142,7 @@ public class Web : MonoBehaviour
                 {
                     Debug.Log("아이템 로드 완료");
                 }
-                GameManager.instance.isInventoryLoad = true;
+                GameManager.Instance.isInventoryLoad = true;
 
                 foreach(var data in itemList.items)
                 {
@@ -178,7 +166,7 @@ public class Web : MonoBehaviour
 
     public IEnumerator SaveInventory()
     {
-        if (string.IsNullOrEmpty(GameManager.instance.playerID))
+        if (string.IsNullOrEmpty(GameManager.Instance.playerID))
         {
             Debug.LogWarning("플레이어 ID가 설정되지 않음. 저장 건너뜀.");
             yield break;
@@ -193,7 +181,7 @@ public class Web : MonoBehaviour
             string itemImagePath = item?.itemImage != null ? item.itemImage.name : "";
             
             WWWForm form = new WWWForm();
-            form.AddField("player_id", GameManager.instance.playerID ?? "");
+            form.AddField("player_id", GameManager.Instance.playerID ?? "");
             form.AddField("item_name", itemName);
             form.AddField("item_type", itemType);
             form.AddField("item_image", "Seed/" + itemImagePath);

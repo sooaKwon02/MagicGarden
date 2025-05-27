@@ -14,10 +14,8 @@ public class Item
     public ItemType itemType;
     public string itemName;
     public Sprite itemImage;
-
-    public bool Use()
-    {
-        return false;
-    }
+    public GameObject itemPrefab;
+    public int digCnt;
+    public int maxDigCnt;
 }
 

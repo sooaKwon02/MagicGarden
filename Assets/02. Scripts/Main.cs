@@ -5,21 +5,19 @@ using UnityEngine;
 public class Main : MonoBehaviour
 {
     public static Main Instance;
-   // public GameObject createPanel;
 
     public Web Web;
-    public NPCQuestManager npcQuestManager;
 
     void Awake()
-    {
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-        //createPanel.SetActive(false);
-        //Web = GetComponent<Web>();
+    { 
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
-
-    //public void CreateID()
-    //{
-    //    createPanel.SetActive(true);
-    //}
 }

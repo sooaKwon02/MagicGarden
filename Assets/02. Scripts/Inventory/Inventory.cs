@@ -56,7 +56,7 @@ public class Inventory : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("FieldItem"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("FieldItem"))
         {
             FieldItems fieldItems = other.GetComponent<FieldItems>();
             if (AddItem(fieldItems.GetItem()))

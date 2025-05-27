@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
             if (animator)
             {
                 animator.SetFloat("Speed", currentSpeed);
-                animator.SetBool("isSprint", sprint);
+                //animator.SetBool("isSprint", sprint);
             }
         }
         else
@@ -59,7 +59,21 @@ public class PlayerMovement : MonoBehaviour
             if (animator)
             {
                 animator.SetFloat("Speed", 0f);
-                animator.SetBool("isSprint", false);
+                //animator.SetBool("isSprint", false);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Collider[] hits = Physics.OverlapSphere(transform.position, 1f);
+            foreach (var hit in hits)
+            {
+                FieldItems fieldItem = hit.GetComponent<FieldItems>();
+                if (fieldItem != null)
+                {
+                    animator.SetTrigger("Dig");
+                    fieldItem.Dig();
+                }
             }
         }
     }

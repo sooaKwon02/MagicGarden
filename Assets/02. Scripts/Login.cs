@@ -17,9 +17,13 @@ public class Login : MonoBehaviour
 
     public GameObject createPanel;
 
+    public GameObject panel;
+    public TMP_Text panelText;
+
     private void Start()
     {
         createPanel.gameObject.SetActive(false);
+        panel.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -30,7 +34,6 @@ public class Login : MonoBehaviour
             {
                 passwordInput.Select();
             }
-            // Create 창 입력 처리도 해주면 좋음
             else if (crIdInput.isFocused)
             {
                 crPasswordInput.Select();
@@ -47,6 +50,13 @@ public class Login : MonoBehaviour
         Debug.Log("입력된 비밀번호: " + password);
     }
 
+    public void ErrorMessage(string message)
+    {
+        panel.SetActive(true);
+        panelText.text = message;
+        StartCoroutine(ClosePanel());
+    }
+
     public void IsCreatePanel()
     {
         createPanel.gameObject.SetActive(true);
@@ -59,14 +69,29 @@ public class Login : MonoBehaviour
 
         if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(password))
         {
-            Debug.Log("아이디와 비밀번호를 모두 입력하세요.");
+            panel.SetActive(true);
+            panelText.text = "아이디와 비밀번호를 모두 입력하세요.";
+            StartCoroutine(ClosePanel());
         }
         else
+        {
+            panel.SetActive(true);
+            panelText.text = "회원가입 성공!";
+            StartCoroutine(ClosePanel());
             StartCoroutine(Main.Instance.Web.RegisterUser(userId, password));
+        }
     }
 
     public void OnXButtonClick()
     {
+        crIdInput.text = "";
+        crPasswordInput.text = "";
         createPanel.gameObject.SetActive(false);
+    }
+
+    IEnumerator ClosePanel()
+    {
+        yield return new WaitForSeconds(1f);
+        panel.SetActive(false);
     }
 }

@@ -7,6 +7,8 @@ using System.Linq;
 
 public class NPCQuestManager : MonoBehaviour
 {
+    public static NPCQuestManager Instance; 
+
     public GameObject npcPanel;
     public TMP_Text text;
 
@@ -16,7 +18,8 @@ public class NPCQuestManager : MonoBehaviour
     private int introIndex = 0;
     private int questIndex = 0;
 
-    private bool isTyping = false;
+    private bool isTyping = false; //대사 타이핑 중
+    private bool isQuest = false;
     private Coroutine typingText;
 
     private bool isIntro = true;
@@ -24,25 +27,37 @@ public class NPCQuestManager : MonoBehaviour
 
     private int currentQuestId = 1;
 
+    AudioSource audioSource;
+    public AudioClip questCompleteSFX;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();  
         npcPanel.SetActive(false);
         StartCoroutine(Main.Instance.Web.GetQuestStepsFromServer(currentQuestId));
     }
 
     void Update()
     {
-        if (FindSeed.isColl)
+        if (CheckPlayer.isColl)
         {
-            if (isTyping)
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    if (!npcPanel.activeSelf)
-                    {
-                        npcPanel.SetActive(true);
-                    }
 
+                if (isTyping)
+                {
                     StopCoroutine(typingText);
                     isTyping = false;
 
@@ -53,44 +68,34 @@ public class NPCQuestManager : MonoBehaviour
                     }
                     else
                     {
-                        int safeIndex = Mathf.Clamp(questIndex - 1, 0, questLines.Count - 1);
+                        int safeIndex = Mathf.Clamp(questIndex, 0, questLines.Count - 1);
                         text.text = questLines[safeIndex].dialogue;
                     }
+
                     return;
                 }
+                    
+                if (isQuest) return; // 중복 실행 방지
+                if (isAccept) return;
+
+                if (isIntro)
+                    StartCoroutine(ShowNextIntroLine());
+                else
+                    StartCoroutine(ShowNextQuestLine());
             }
 
             if (isAccept)
             {
                 if (Input.GetKeyDown(KeyCode.Y))
-                {
                     AcceptQuest();
-                }
                 else if (Input.GetKeyDown(KeyCode.N))
-                {
                     StartCoroutine(RejectQuest());
-                }
-                return;
-            }
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                if (isIntro)
-                {
-                    StartCoroutine(ShowNextIntroLine());
-                }
-                else
-                {
-                    StartCoroutine(ShowNextQuestLine());
-                }
             }
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                if(!isIntro && !isAccept && !isTyping)
-                {
+                if (!isIntro && !isAccept && !isTyping)
                     npcPanel.SetActive(false);
-                }
             }
         }
     }
@@ -103,10 +108,19 @@ public class NPCQuestManager : MonoBehaviour
         introIndex = 0;
         questIndex = 0;
 
-        isIntro = true;
-        isAccept = false;
-
-        text.text = "";
+        if (introLines.Count > 0 || questLines.Count > 0)
+        {
+            isIntro = true;
+            isAccept = false;
+            text.text = "";
+        }
+        else
+        {
+            Debug.Log("[NPCQuestManager] 모든 퀘스트 완료! Intro 진입 안함");
+            isIntro = false;
+            isAccept = false;
+            text.text = "모든 퀘스트 완료!";
+        }
     }
 
     private IEnumerator ShowNextIntroLine()
@@ -114,7 +128,7 @@ public class NPCQuestManager : MonoBehaviour
         if (!npcPanel.activeSelf)
             npcPanel.SetActive(true);
 
-        yield return null;
+        isQuest = true;
 
         if (introIndex < introLines.Count)
         {
@@ -127,6 +141,9 @@ public class NPCQuestManager : MonoBehaviour
             isAccept = true;
             text.text = "퀘스트를 수락하시겠습니까?\n(Y: 수락 / N: 거절)";
         }
+
+        yield return new WaitUntil(() => !isTyping);
+        isQuest = false;
     }
 
     private void AcceptQuest()
@@ -144,7 +161,8 @@ public class NPCQuestManager : MonoBehaviour
         isAccept = false;
         isIntro = false;
 
-        yield return StartCoroutine(TypeLine("아쉽다.. 다음에 부탁해!"));
+        typingText = StartCoroutine(TypeLine("아쉽다.. 다음에 부탁해!"));
+        yield return new WaitUntil(() => !isTyping);
 
         yield return new WaitForSeconds(1f);
 
@@ -158,10 +176,12 @@ public class NPCQuestManager : MonoBehaviour
 
     private IEnumerator ShowNextQuestLine()
     {
+        if (isQuest) yield break;
+        isQuest = true;
+
         if (!npcPanel.activeSelf)
         {
             npcPanel.SetActive(true);
-
             yield return null;
         }
 
@@ -169,8 +189,14 @@ public class NPCQuestManager : MonoBehaviour
         {
             Debug.Log($"퀘스트 {currentQuestId} 완료!");
             text.text = "";
+
+            isIntro = false;
+            isAccept = false;
+            isQuest = false;
+
             currentQuestId++;
             StartCoroutine(Main.Instance.Web.GetQuestStepsFromServer(currentQuestId));
+
             yield break;
         }
 
@@ -180,10 +206,20 @@ public class NPCQuestManager : MonoBehaviour
         if (step.condition_type == "custom")
         {
             questIndex++;
+            yield return new WaitUntil(() => !isTyping);
+            isQuest = false;
+            StartCoroutine(ShowNextQuestLine());
         }
         else if (step.condition_type == "collect")
         {
             TryAutoAdvanceCollectQuest();
+            yield return new WaitUntil(() => !isTyping);
+            isQuest = false;
+        }
+        else
+        {
+            yield return new WaitUntil(() => !isTyping);
+            isQuest = false;
         }
     }
 
@@ -192,25 +228,22 @@ public class NPCQuestManager : MonoBehaviour
         if (questIndex >= questLines.Count) return;
 
         QuestStep step = questLines[questIndex];
+        if (step.condition_type != "collect") return;
 
-        if (step.condition_type != "collect")
-            return;
-
-        string targetItemName = step.condition_target;
-        int requiredAmount = step.condition_value;
-
-        int count = Inventory.instance.items
-            .Count(item => item.itemName == targetItemName);
-
-        if (count >= requiredAmount)
+        int count = Inventory.instance.items.Count(item => item.itemName == step.condition_target);
+        if (count >= step.condition_value)
         {
-            Debug.Log($"인벤토리 내 '{targetItemName}' 수량 {count}개 == 조건 충족");
+            Debug.Log($"'{step.condition_target}' 수량 {count}개: 조건 충족!");
             questIndex++;
-            //ShowNextQuestLine();
+            if (audioSource != null && questCompleteSFX != null)
+            {
+                audioSource.PlayOneShot(questCompleteSFX);
+            }
+            StartCoroutine(ShowNextQuestLine());
         }
         else
         {
-            Debug.Log($"인벤토리에 '{targetItemName}' 없음 또는 수량 부족");
+            Debug.Log($"인벤토리에 '{step.condition_target}' 없음 또는 수량 부족");
         }
     }
 
@@ -225,8 +258,11 @@ public class NPCQuestManager : MonoBehaviour
             value >= step.condition_value)
         {
             Debug.Log($"퀘스트 조건 충족: {type} {target} {value}");
+            if (audioSource != null && questCompleteSFX != null)
+            {
+                audioSource.PlayOneShot(questCompleteSFX);
+            }
             questIndex++;
-            ShowNextQuestLine();
         }
     }
 
@@ -243,5 +279,12 @@ public class NPCQuestManager : MonoBehaviour
         }
 
         isTyping = false;
+    }
+
+    public QuestStep GetCurrentQuestStep()
+    {
+        if (questIndex < questLines.Count)
+            return questLines[questIndex];
+        return null;
     }
 }
